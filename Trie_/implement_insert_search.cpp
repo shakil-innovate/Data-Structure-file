@@ -22,7 +22,7 @@ struct Node
 
    void put(char ch,Node* node)
    {
-     links[ch-'a']=node;
+     links[ch-'a']=node; 
    }
 
    Node* get(char ch)
