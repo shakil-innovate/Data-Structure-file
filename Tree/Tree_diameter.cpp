@@ -1,3 +1,5 @@
+//complexity of this code is o(n*n)
+
 #include<bits/stdc++.h>
 using namespace std;
 
