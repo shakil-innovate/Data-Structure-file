@@ -1,0 +1,102 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class Graph
+{
+ public:
+    vector<int>arr;
+    vector<int>seg_tree;
+
+    Graph(int element)
+    {
+        arr.resize(element);
+        seg_tree.resize(element*4);
+    }
+
+    void build(int low,int high,int pos)
+    {
+       if(low==high)
+       {
+         seg_tree[pos]=arr[low];  //leaf node
+       }
+       else
+       {
+        int mid=(low+high)>>1;
+        build(low,mid,pos*2+1);
+        build(mid+1,high,pos*2+2);
+
+        seg_tree[pos]=min(seg_tree[pos*2+1],seg_tree[pos*2+2]);
+       }
+    }
+
+       int rangeQuery(int qlow,int qhigh,int low,int high, int pos)
+       {
+          if(qlow<=low && qhigh>=high)
+          {
+            return seg_tree[pos];
+          }
+          else if(qlow>high || qhigh< low)
+                 return INT_MAX;
+          else
+          {
+            int mid=(low+high)>>1;
+            return min(rangeQuery(qlow,qhigh,low,mid,pos*2+1),rangeQuery(qlow,qhigh , mid+1, high, pos*2+2));
+          }
+    }
+   
+    void update(int low,int high,int value,int index, int pos)
+    {
+        if(low==high)
+        {
+            seg_tree[pos]=value;
+        }
+        else
+        {
+            int mid=(low+high)>>1;
+            if(index<=mid)
+            {
+                update(low,mid,value,index,pos*2+1);
+            }
+            else update(mid+1,high,value,index,pos*2+2);
+
+            seg_tree[pos]=min(seg_tree[pos*2+1],seg_tree[pos*2+2]);
+        }
+    }
+};
+
+int main()
+{
+    int n;
+   // cout << "Enter number of elements: ";
+    cin >> n;
+
+    Graph g(n);
+
+  //  cout << "Enter " << n << " elements:\n";
+    for (int i = 0; i < n; i++) {
+        cin >> g.arr[i];
+    }
+
+    g.build(0, n - 1, 0); // Build segment tree from arr[0..n-1]
+
+    // Example Query
+    int l, r;
+   // cout << "Enter range [l r] for range minimum query (0-based index): ";
+    cin >> l >> r;
+    int result = g.rangeQuery(l, r, 0, n - 1, 0);
+    cout << "Minimum in range [" << l << ", " << r << "] = " << result << endl;
+
+    // Example Update
+    int idx, val;
+   // cout << "Enter index and new value to update: ";
+    cin >> idx >> val;
+    g.update(0, n - 1, val, idx, 0);
+
+    // Query again after update
+   // cout << "Enter range [l r] for query after update: ";
+    cin >> l >> r;
+    result = g.rangeQuery(l, r, 0, n - 1, 0);
+    cout << "Minimum in range [" << l << ", " << r << "] after update = " << result << endl;
+
+    return 0;
+}
