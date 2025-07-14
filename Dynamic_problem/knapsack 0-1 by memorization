@@ -1,0 +1,29 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+
+
+int main() {
+    vector<int>profit={60,100,120};
+    vector<int>weight{10,20,30};
+    int w=50;
+
+    vector<vector<int>>dp(weight.size()+1,vector<int>(w+1,-1));
+   
+    for(int i=0; i<weight.size()+1 ; i++)
+    {
+        for(int ww=0;ww<=w ; ww++)
+        {
+            if(ww==0 || i==0)
+            dp[i][ww]=0;
+
+            else if(weight[i] <= w)
+            {
+                dp[i][ww]=max(dp[i-1][ww],profit[i]+dp[i-1][ww-weight[i]]);
+            }
+            else dp[i][ww]=dp[i-1][ww];
+        }
+    }
+
+    cout<<dp[weight.size()][w]<<endl;
+}
