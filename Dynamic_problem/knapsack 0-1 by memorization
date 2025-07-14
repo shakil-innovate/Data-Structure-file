@@ -26,4 +26,13 @@ int main() {
     }
 
     cout<<dp[weight.size()][w]<<endl;
+    vector<int>st;
+    int j=w;
+    for(int i=weight.size();i>0; i--)
+    {
+        if(dp[i][j]!=dp[i-1][j]){st.push_back(i);j=j-weight[i];}
+    }
+
+    for(auto it:st)cout<<it+1<<" ";
+    cout<<endl;
 }
