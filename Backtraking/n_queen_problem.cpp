@@ -4,32 +4,8 @@
 using namespace std;
 typedef long long ll;
 ll n;
-
-bool isSafe(vector<string>&board,ll row,ll col)
-{
-    // check colmn
-    for(int i=0;i<row ; i++)
-    {
-        if(board[i][col]=='Q')
-           return false;
-    }
-
-    //check top-lef diagonal
-    for(int i=row-1,j=col-1;i>=0 && j>=0 ; i--,j--)
-    {
-        if(board[i][j]=='Q')
-          return false;
-    }
-
-    //check top-right diagonal
-    for(int i=row-1,j=col+1;i>=0 && j<n ; i--,j++)
-    {
-        if(board[i][j]=='Q')
-           return false;
-    }
-
-   return true;
-}
+ll offset;
+vector<bool>colmn,leftDiagonal,rightDiagonal;
 
 void solve(ll row,vector<string>&board,vector<vector<string>>&solution)
 {
@@ -41,10 +17,13 @@ void solve(ll row,vector<string>&board,vector<vector<string>>&solution)
 
     for(int col=0;col<n ; col++)
     {
-        if(isSafe(board,row,col))
+        if(!colmn[col] && !leftDiagonal[col-row+offset] && !rightDiagonal[row+col])
         {
+            colmn[col]=leftDiagonal[col-row+offset]=rightDiagonal[row+col]=true;
             board[row][col]='Q';
             solve(row+1,board,solution);
+            
+            colmn[col]=leftDiagonal[col-row+offset]=rightDiagonal[row+col]=false;
             board[row][col]='.';            //backtracking
         }
     }
@@ -55,6 +34,10 @@ int main()
    cout<<"Enter the value of N:"<<endl;
    cin>>n;
 
+   colmn.resize(n,false);
+   leftDiagonal.resize(2*n,false);
+   rightDiagonal.resize(2*n,false);
+   offset=n-1;
    vector<string>board(n,string(4,'.'));
    vector<vector<string>>solution;
    
@@ -68,6 +51,4 @@ int main()
         cout<<row<<endl;
         cout<<endl;
    }
-
-
 }
