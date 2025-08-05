@@ -4,22 +4,21 @@
 using namespace std;
 typedef long long ll;
 
+ll V,M,E;
 vector<vector<ll>>solution;
 
-bool isSafe(ll node,vector<ll>&color,vector<vector<ll>>&graph,ll c,ll V)
+bool isSafe(ll node,vector<vector<ll>>&graph,vector<ll>&color,ll c)
 {
-    for(ll adj=0;adj<V; adj++)
+    for(int adj=0; adj<V; adj++)
     {
-        if(graph[node][adj] && color[adj]==c)
-        {
-            return false;
-        }
+            if(graph[adj][node] && color[adj]==c)
+              return false;
     }
 
     return true;
 }
 
-void solve(ll node,vector<ll>&color,ll M,vector<vector<ll>>&graph,ll V)
+void solve(ll node,vector<vector<ll>>&graph,vector<ll>&color)
 {
     if(node==V)
     {
@@ -27,35 +26,35 @@ void solve(ll node,vector<ll>&color,ll M,vector<vector<ll>>&graph,ll V)
         return;
     }
 
-    for(ll c=1 ;c<=M; c++)
+    for(int c=1;c<=M; c++)
     {
-        if(isSafe(node,color,graph,c,V))
+        if(isSafe(node,graph,color,c))
         {
             color[node]=c;
-            solve(node+1,color,M,graph,V);
-            color[node]=0;  //backtracking
+            solve(node+1,graph,color);
+            color[node]=0;   // backtracking
         }
     }
-
 }
 
-void graph_coloring(vector<vector<ll>>&graph,ll M,ll V)
+void graph_coloring(vector<vector<ll>>&graph)
 {
     vector<ll>color(V,0);
-    solve(0,color,M,graph,V);
+
+    solve(0,graph,color);
 
     cout<<solution.size()<<endl;
 
-    for(auto &sol:solution)
+    for(int i=0; i<solution.size();i++)
     {
-        for(auto &it:sol)   cout<<it<<" ";
+        for(auto it:solution[i])cout<<it<<" ";
         cout<<endl;
     }
 }
 
 int main(){
-    ll V,E,M;   cin>>V>>E;
-
+ 
+    cin>>V>>E;
     vector<vector<ll>>graph(V,vector<ll>(V,0));
 
     for(int i=0; i<E ; i++)
@@ -65,10 +64,7 @@ int main(){
         graph[v][u]=1;
     }
 
-    //Enter number of color
     cin>>M;
-
-    graph_coloring(graph,M,V);
-
+    graph_coloring(graph);
 
 }
