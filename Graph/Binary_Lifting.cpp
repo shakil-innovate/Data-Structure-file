@@ -1,55 +1,69 @@
-problem link:https://leetcode.com/problems/kth-ancestor-of-a-tree-node/description/
 class TreeAncestor {
-    vector<vector<int>> up;
-    vector<int> depth;
-    int LOG;
 public:
+    vector<vector<int>>up;
+    vector<int>depth;
+    int LOG=0;
     TreeAncestor(int n, vector<int>& parent) {
-        LOG = 0;
-        while ((1 << LOG) <= n) LOG++;
+        while((1<<LOG)<=n)LOG++;
 
-        up.assign(n, vector<int>(LOG, -1));
-        depth.assign(n, 0);
+        up.resize(n,vector<int>(LOG,-1));
+        depth.resize(n,0);
 
-        // build tree children
-        vector<vector<int>> g(n);
-        int root = 0;
-        for (int i = 0; i < n; i++) {
-            if (parent[i] == -1) root = i;
-            else g[parent[i]].push_back(i);
-        }
+        vector<vector<int>>g(n);
 
-        // DFS using stack to compute depth and up[v][0]
-        stack<int> st;
-        st.push(root);
-        depth[root] = 0;
-        up[root][0] = -1;
-
-        while (!st.empty()) {
-            int node = st.top(); st.pop();
-            for (int child : g[node]) {
-                depth[child] = depth[node] + 1;
-                up[child][0] = node;
-                st.push(child);
+        //child setup
+        for(int i=0;i<n;i++)
+        {
+            if(parent[i]!=-1)
+            {
+                g[parent[i]].push_back(i);
             }
         }
 
-        // build binary lifting table safely
-        for (int j = 1; j < LOG; j++) {
-            for (int v = 0; v < n; v++) {
-                int mid = up[v][j-1];
-                up[v][j] = (mid == -1 ? -1 : up[mid][j-1]);
+            stack<int>st;
+            st.push(0);
+            
+
+          //find depth
+            while(!st.empty())
+            {
+                int node=st.top();
+                st.pop();
+
+                for(auto child:g[node])
+                {
+                    st.push(child);
+                    depth[child]=depth[node]+1;
+                }
             }
+
+     //build binary lifting   
+   for(int i=1;i<n;i++)up[i][0]=parent[i];
+
+     for(int j=1;j<LOG;j++)
+     {
+        for(int v=0;v<n;v++)
+        {
+            int mid=up[v][j-1];
+            up[v][j]=(mid==-1?-1:up[mid][j-1]);
         }
+     }
     }
-
+    
     int getKthAncestor(int node, int k) {
-        for (int j = 0; j < LOG; j++) {
-            if (k & (1 << j)) {
-                node = up[node][j];
-                if (node == -1) return -1;
-            }
+        if(depth[node]<k)return -1;
+
+        for(int j=0;j<LOG;j++)
+        {
+            if(k&(1<<j))node=up[node][j];
+            if( node==-1)return -1;
         }
         return node;
     }
 };
+
+/**
+ * Your TreeAncestor object will be instantiated and called as such:
+ * TreeAncestor* obj = new TreeAncestor(n, parent);
+ * int param_1 = obj->getKthAncestor(node,k);
+ */
