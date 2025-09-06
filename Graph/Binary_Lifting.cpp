@@ -1,3 +1,4 @@
+problem link:https://leetcode.com/problems/kth-ancestor-of-a-tree-node/description/
 class TreeAncestor {
 public:
     vector<vector<int>>up;
