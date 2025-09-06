@@ -1,3 +1,4 @@
+problem link:https://www.spoj.com/problems/LCASQ/
 //--------------------------------------//
 #include<bits/stdc++.h>
 using namespace std;
