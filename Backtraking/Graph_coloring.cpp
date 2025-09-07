@@ -1,70 +1,91 @@
 //tutorial:https://www.youtube.com/watch?v=052VkKhIaQ4&list=PLDN4rrl48XKpZkf03iYFl-O29szjTrs_O&index=66
-
+//--------------------------------------//
 #include<bits/stdc++.h>
 using namespace std;
 typedef long long ll;
+typedef double db;
+#define nl '\n'
 
-ll V,M,E;
-vector<vector<ll>>solution;
+//---------------------------------------//
+ll V,E,cl;
+vector<vector<ll>>g,solution;
+vector<ll>color;
 
-bool isSafe(ll node,vector<vector<ll>>&graph,vector<ll>&color,ll c)
+bool isSafe(ll n,ll c)
 {
-    for(int adj=0; adj<V; adj++)
+    for(int adj=0;adj<V;adj++)
     {
-            if(graph[adj][node] && color[adj]==c)
-              return false;
+        if(g[n][adj]==1 && color[adj]==c)
+        {
+            return false;
+        }
     }
-
     return true;
 }
 
-void solve(ll node,vector<vector<ll>>&graph,vector<ll>&color)
+void solve(ll n,ll k)
 {
-    if(node==V)
+    // if(n >= V) return;
+    if(n==V)
     {
         solution.push_back(color);
         return;
     }
 
-    for(int c=1;c<=M; c++)
+    for(int c=0;c<k;c++)
     {
-        if(isSafe(node,graph,color,c))
+        if(isSafe(n,c))
         {
-            color[node]=c;
-            solve(node+1,graph,color);
-            color[node]=0;   // backtracking
+            color[n]=c;
+            solve(n+1,k);
+            color[n]=-1;
         }
     }
 }
 
-void graph_coloring(vector<vector<ll>>&graph)
+void shakil()
 {
-    vector<ll>color(V,0);
-
-    solve(0,graph,color);
-
-    cout<<solution.size()<<endl;
-
-    for(int i=0; i<solution.size();i++)
-    {
-        for(auto it:solution[i])cout<<it<<" ";
-        cout<<endl;
-    }
-}
-
-int main(){
- 
     cin>>V>>E;
-    vector<vector<ll>>graph(V,vector<ll>(V,0));
+    g.resize(V,vector<ll>(V,0));
+    color.resize(V,-1);
 
-    for(int i=0; i<E ; i++)
+    for(int i=0;i<E;i++)
     {
         ll u,v; cin>>u>>v;
-        graph[u][v]=1;
-        graph[v][u]=1;
+        g[u][v]=g[v][u]=1;
     }
 
-    cin>>M;
-    graph_coloring(graph);
+    ll min_color=1;
+    solution.clear();
 
+    while(1)
+    {
+        solution.clear();
+        solve(0,min_color);
+        if(solution.size()==0)
+          min_color++;
+        else break;
+    }
+    cout<<"cramatic number: "<<min_color<<nl;
+    cout<<"total solution is "<<solution.size()<<nl;
+
+    for(int i=0;i<solution.size();i++)
+    {
+        for(int j=0;j<V;j++)cout<<solution[i][j]<<" ";
+        cout<<nl;
+    }
+    
+}
+
+int  main()
+{
+   ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    ll tt=1;
+    // cin>>tt;
+
+    for(ll i=1;i<=tt;i++)
+    {
+      shakil();
+    }
 }
