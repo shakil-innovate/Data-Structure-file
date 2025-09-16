@@ -18,7 +18,7 @@ void linear(ll n,vector<ll>&primes,vector<ll>&spf)
 
         for(auto &p:primes)
         {
-            if(p>spf[i] || i*p>n)break;
+            if(p>spf[i] || i*p>n)break;   //smaller num. is a divisor of i
             spf[i*p]=p;
         }
     }
