@@ -17,19 +17,16 @@ const ll mod2=1e9+9;
 const ll INF=1e9;
 //---------------------------------------//
  
-struct  DoubleHash
-{
+struct  DoubleHash{
   vi h1,h2,p1,p2;
   ll base1=131,base2=133;
  
-  DoubleHash(string &s)
-  {
+  DoubleHash(string &s){
     ll n=s.size();
     h1.resize(n+1,0);h2.resize(n+1,0);
     p1.resize(n+1,1),p2.resize(n+1,1);
  
-    for(ll i=0;i<n;i++)
-    {
+    for(ll i=0;i<n;i++){
       h1[i+1]=(h1[i]*base1 + s[i])%mod1;
       h2[i+1]=(h2[i]*base2 + s[i])%mod2;
       p1[i+1]=(p1[i]*base1)%mod1;
@@ -37,8 +34,7 @@ struct  DoubleHash
     }
   }
  
-  pair<ll,ll> getHash(ll l,ll r)
-  {
+  pair<ll,ll> getHash(ll l,ll r){
     ll x1=(h1[r+1]-h1[l]*p1[r-l+1] )%mod1;
     ll x2=(h2[r+1]- h2[l]*p2[r-l+1])%mod2;
  
@@ -50,19 +46,17 @@ struct  DoubleHash
  
 };
  
-void shakil()
-{
+void shakil(){
   string s;   cin>>s;
  
   DoubleHash Hf(s);
   string rs=s;
-  reverse(rs.begin(),rs.end());
+  reverse(rs.begin(),rs.end()); 
   DoubleHash Hr(rs);
  
   ll n=s.size();
  
-  auto Palindrome=[&](ll l,ll r)-> bool
-  {
+  auto Palindrome=[&](ll l,ll r)-> bool{
     auto hf=Hf.getHash(l,r);
     ll rl=n-1-r;
     ll rr=n-1-l;
@@ -74,10 +68,8 @@ void shakil()
  
   ll best_len=1,best_pos=0;
  
-  auto check=[&](ll len)->ll
-  {
-    for(ll i=0;i+len-1<n;i++)
-    {
+  auto check=[&](ll len)->ll{
+    for(ll i=0;i+len-1<n;i++){
       ll j=i+len-1;
       if(Palindrome(i,j))  return i;
    }
@@ -87,16 +79,14 @@ void shakil()
  
   ll low=1,high=n;
  
-  while(low<=high)
-  {
+  while(low<=high){
     ll mid=(low+high)>>1;
     if(mid%2==0)mid--;
     if(mid<=0) {low=mid+1;continue;}
  
     ll pos=check(mid);
  
-    if(pos!=-1)
-    {
+    if(pos!=-1){
       if(mid>best_len)
       {
         best_len=mid;
@@ -108,16 +98,14 @@ void shakil()
   }
  
   low=2,high=n;
-  while(low<=high)
-  {
+  while(low<=high){
      ll mid=(low+high)>>1;
      if(mid%2!=0){mid--;}
      if(mid<=0) {low=mid+2;continue;}
  
      ll pos=check(mid);
  
-     if(pos!=-1)
-     {
+     if(pos!=-1){
       if(mid>best_len)
       {
         best_len=mid;
@@ -129,11 +117,9 @@ void shakil()
   }
  
   cout<<s.substr(best_pos,best_len)<<nl;
- 
- 
+
 }
-int  main()
-{
+int  main(){
    ios_base::sync_with_stdio(0);cin.tie(0);
     ll tt=1;
     // cin>>tt;
