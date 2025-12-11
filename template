@@ -1,0 +1,42 @@
+//--------------------------------------//
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long ll;         typedef unsigned long long ull;    
+typedef long double ld;       typedef double db;
+typedef priority_queue<ll, vector<ll>, greater<ll>> min_pq;   
+
+#define pb push_back 
+#define nl '\n'
+#define vl vector<ll>
+#define f first
+#define s second
+#define i128  __int128
+#define all(v) v.begin(),v.end()
+ll mod= 998244353;      const ll INF=1e15;
+inline mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
+typedef priority_queue<ll,vector<ll>>  mx_pq;
+
+ll add(ll a,ll b){ return ((a%mod + b%mod)+ mod ) % mod;}
+ll sub(ll a,ll b){ return ((a%mod - b%mod)+mod)% mod;}
+ll mul(ll a,ll b){ return ((a%mod) * (b%mod))%mod ;}
+ll power(ll a, ll b){ll res=1; a%=mod;while(b > 0){if(b & 1)res=((i128)res*a) %mod; a=((i128)a*a)%mod;b=b>>1;}return res;}
+ll inv(ll a){return power(a,mod-2);}
+
+ll nCr(ll n, ll r) {if (r >n - r) r= n-r; ll res = 1; for (ll i = 0; i < r; ++i) {res =((res * (n - i))%mod *inv (i + 1))%mod;}
+   return res;}
+// function<return_type(just data type ...)> name = [&](parameters...) -> return_type {};
+//--------------------------------------------------------------------------------//
+void shakil(){
+
+}
+int main(){
+    ios_base::sync_with_stdio(0);cin.tie(0);
+    ll tt=1; 
+
+    // cin >> tt;
+    for(ll i = 1; i <= tt; i++){
+      // cout<<"Case "<<i<<": ";
+        shakil();
+    }
+    return 0;
+}
