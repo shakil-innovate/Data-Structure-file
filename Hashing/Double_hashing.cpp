@@ -19,7 +19,7 @@ const ll INF=1e9;
  
 struct  DoubleHash{
   vi h1,h2,p1,p2;
-  ll base1=131,base2=133;
+  ll base1=911382,base2=972663;
  
   DoubleHash(string &s){
     ll n=s.size();
