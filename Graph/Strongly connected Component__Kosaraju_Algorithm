@@ -1,65 +1,51 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
-stack<int>st;
-vector<bool>vis;
-vector<vector<int>>graph,reverse_g,SCC;
+class Solution {
+public:
+  vector<int> topologicalSort(vector<vector<int>>& adj) {
+   int n = adj.size();
+   vector<int> indegree(n, 0);
+   
+   for (int i = 0; i < n; i++)
+    for (int v : adj[i])
+     indegree[v]++;
+     queue<int> q;
 
-void dfs2(int u,vector<int>&component){
-  vis[u]=1;
-  component.push_back(u);
+     for (int i = 0; i < n; i++)
+      if (indegree[i] == 0) q.push(i);
+       vector<int> topo;
 
-  for(auto v:reverse_g[u]){
-    if(vis[v]==0)  dfs2(v,component);
-  }  
-}
+       while (!q.empty()) {
+        int u = q.front(); q.pop();
+        topo.push_back(u);
 
-void dfs1(int u){
-  vis[u]=1;
-  for(auto v:graph[u]){
-    if(vis[v]==0)
-      dfs1(v);
-    }
-  st.push(u);
-}
+        for (int v : adj[u]) {
+         indegree[v]--;
 
-int main(){
-  int node,edge;   cin>>node>>edge;
-
-  graph.resize(node);
-  reverse_g.resize(node);
-
-  for(int i=0 ;i<edge ; i++){
-  int x,y;    cin>>x>>y;
-  graph[x].push_back(y);
-  reverse_g[y].push_back(x);
+         if (indegree[v] == 0) q.push(v);
+        }
+      }
+    return topo;
   }
+};
+
+int main() {
+ int T; cin >> T;
+
+ while (T--) {
+  int E, N; cin >> E >> N;
+  vector<vector<int>> adj(N);
+    
+  for (int i = 0; i < E; i++) {
+   int u, v; cin >> u >> v;
+   adj[u].push_back(v);
+  }
+
+  Solution obj;
   
-  vis.resize(node,0);
-  
-  for(int i=0; i<node ; i++){
-    if(vis[i]==0)
-     dfs1(i);
-  }
-
-  fill(vis.begin(),vis.end(),false);
-
-  while(!st.empty()){
-   int u=st.top();
-   st.pop();
-
-   if(vis[u]==0){
-    vector<int>component;
-    dfs2(u,component);
-     SCC.push_back(component);
-    }
-  }
-  cout<<"SCC is "<<SCC.size()<<endl;
-
-  for(int i=0; i<SCC.size() ; i++){
-   for(auto com:SCC[i]){
-    cout<<com<<" ";
-    }
-  cout<<endl;
+  vector<int> res = obj.topologicalSort(adj);
+   for (int x : res) cout << x << " ";
+     cout << "\n";
   }
 }
