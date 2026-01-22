@@ -4,28 +4,22 @@ typedef long long ll;
 
 const ll mod=5;
 
-
 void seive_Eratosthenes() {
+ ll n;     cin>>n;
+ vector<bool>prime(n+1,1);
 
-    ll n;       cin>>n;
+ for(int i=2; i*i<=n ; i++){
+  if(prime[i])
+   for(int j=i*i; j<=n; j+=i)
+    prime[j]=0;
+ }
 
-    vector<bool>prime(n+1,1);
+ ll ans=0;
+ for(int i=2; i<=n; i++)  
+  if(prime[i])
+   ans++;
 
-    for(int i=2; i*i<=n ; i++)
-    {
-        if(prime[i])
-        {
-            for(int j=i*i; j<=n; j+=i)
-            {
-                prime[j]=0;
-            }
-        }
-    }
-
-    ll ans=0;
-    for(int i=2; i<=n; i++)if(prime[i])ans++;
-
-    cout<<ans<<endl;
+  cout<<ans<<endl;
 }
 
 int main() {
