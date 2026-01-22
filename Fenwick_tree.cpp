@@ -10,36 +10,34 @@ ll n;
 vector<ll>bit(N,0);
 
 void update(ll ind,ll val){
-    while(ind<=n) {
-        bit[ind]+=val;
-        ind=ind+(ind & (-ind));
-    }
+ while(ind<=n) {
+  bit[ind]+=val;
+    ind=ind+(ind & (-ind));
+  }
 }
 
 ll sum(ll ind){
-    ll res=0;
-    while(ind>0){
-        res+=bit[ind];
-        ind=ind-(ind&(-ind));
-    }
-    return res;
+  ll res=0;
+  while(ind>0){
+   res+=bit[ind];
+   ind=ind-(ind&(-ind));
+  }
+return res;
 }
 
 ll range_sum(ll low,ll high){
-    return sum(high)-sum(low-1);
+  return sum(high)-sum(low-1);
 }
 
 void shakil(){
     cin>>n;
-
     vector<ll>v(n+1);
 
     for(int i=1;i<=n;i++) cin>>v[i];
 
-    for(int i=1; i<=n; i++){
-        update(i,v[i]);
-    }
-
+    for(int i=1; i<=n; i++)
+      update(i,v[i]);
+    
     ll first_el_sum;    cin>>first_el_sum;
     cout<<"sum of first nth el item :"<<sum(first_el_sum)<<nl;
 
