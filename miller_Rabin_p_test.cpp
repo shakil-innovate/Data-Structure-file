@@ -13,43 +13,43 @@ ll power(ll a, ll b){ll res=1; a%=mod;while(b > 0){if(b & 1)res=((i128)res*a) %m
 //---------------------------------------//
 
 bool isPrime(ll n){
-  if(n<2 || n%2==0)return false;
-  if(n==2 || n==3) return 1;
-  mod=n;
+ if(n<2 || n%2==0)return false;
+ if(n==2 || n==3) return 1;
+ mod=n;
 
-  ll d=n-1;
-  ll m=0;
-  while(d%2==0){
-    m++;
-    d/=2;
-  }
+ ll d=n-1;
+ ll m=0;
+ while(d%2==0){
+  m++;
+  d/=2;
+ }
 
-  vector<ll>base={2,3,5,7,11,13,17,19,23};
+vector<ll>base={2,3,5,7,11,13,17,19,23};
 
-  for(auto a:base){
-      if(a>n) break;
-      ll x=power(a,d);
+for(auto a:base){
+ if(a>n) break;
+ ll x=power(a,d);
 
-      if(x==1 || x==n-1)continue;
-      bool composite=1;
-      for(ll r=1;r<m;r++){
-         x=(i128)x*x%n;
-        if(x==n-1 ){
-          composite=false;
-          break;
-        }
-      }
-      if(composite==1)return 0;
-  }
-  return 1;
+ if(x==1 || x==n-1)continue;
+ bool composite=1;
+ 
+ for(ll r=1;r<m;r++){
+  x=(i128)x*x%n;
+  if(x==n-1 ){
+  composite=false;
+   break;
+ }
+}
+
+ if(composite==1)return 0;
+}
+return 1;
 }
 
 void shakil(){
   cout<<"Enter a number: "<<nl;
   ll num;   cin>>num;
-
   cout<<num<<" is "<<(isPrime(num)==true?"Prime ":" not prime")<<nl;
-
 }
 
 int main(){
