@@ -17,33 +17,29 @@ void shakil(){
 	vl basis(63,0);
 
 	for(auto x:v){
-		for(ll i=62;i>=0;i--){
-			if(((x>>i) & 1)==0) continue;
+	 for(ll i=62;i>=0;i--){
+		if(((x>>i) & 1)==0) continue;
 
-			if(basis[i]==0){
-				basis[i]=x;
-				break;
-			}
-
-			x^=basis[i];
+		if(basis[i]==0){
+		 basis[i]=x;
+		 break;
 		}
+
+		x^=basis[i];
 	}
+ }
 
-   ll ans=0;
+ ll ans=0;
 
-   for(ll i=62;i>=0;i--){
-   	ans=max(ans,ans^basis[i]);
-   }
-
-   cout<<ans<<nl;
-
+ for(ll i=62;i>=0;i--){
+ ans=max(ans,ans^basis[i]);
+ }
+   
+  cout<<ans<<nl;
 }
 
 int main(){
 	ios_base::sync_with_stdio(0),cin.tie(0);
-
-	// freopen("input.txt","r",stdin);
-	// freopen("output.txt","w",stdout);
 
 	ll tt=1;
 	// cin>>tt;
