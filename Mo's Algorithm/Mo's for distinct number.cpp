@@ -2,123 +2,89 @@
 using namespace std;
 
 int BLOCK_SIZE;
-struct Query
-{
-    int l,r,index;
-    Query(int left,int right,int index_)
-    {
-        l=left;
-        r=right;
-        index=index_;
-    }
+struct Query{
+ int l,r,index;
+ Query(int left,int right,int index_){
+  l=left;
+  r=right;
+  index=index_;
+ }
 };
 
-bool compare(const Query &a ,const Query &b)
-{
-    int left_block_index=a.l/BLOCK_SIZE;
-    int other_block_index=b.l/BLOCK_SIZE;
+bool compare(const Query &a ,const Query &b){
+ int left_block_index=a.l/BLOCK_SIZE;
+ int other_block_index=b.l/BLOCK_SIZE;
 
-    if(left_block_index!=other_block_index)
-    {
-        return left_block_index < other_block_index;
-    }
-    return a.r> b.r ;
+ if(left_block_index!=other_block_index){
+  return left_block_index < other_block_index;
+ }
+ return a.r> b.r ;
 }
 
-vector<int> solve(vector<int> &a,vector<Query>queries)
-{
-    sort(queries.begin(),queries.end(),compare);
+vector<int> solve(vector<int> &a,vector<Query>queries){
+ sort(queries.begin(),queries.end(),compare);
      
-    vector<int>freq(1000001,0);
-    vector<int>ans(queries.size());
+ vector<int>freq(1000001,0);
+ vector<int>ans(queries.size());
 
-    int cnt=1;
-    int start=queries[0].l,end=start;
-    freq[a[start]]++;
+ int cnt=1;
+ int start=queries[0].l,end=start;
+ freq[a[start]]++;
 
-    for(auto &query:queries)
-    {
-     //   cout<<start<<" "<<end<<endl;
-        while(start < query.l)
-        {
-           // cout<<"1 "<<start<<" "<<query.l<<endl;
-            freq[a[start]]--;
+ for(auto &query:queries){
+  while(start < query.l){
+   freq[a[start]]--;
 
-            if(freq[a[start]]==0)
-              cnt--;
-            start++;
-        }
-        while(start > query.l)
-        {
-           // cout<<"2 "<<start<<" "<<query.l<<endl;
-              start--;
-            freq[a[start]]++;
+    if(freq[a[start]]==0)cnt--;
+    
+     start++;
+  }
+  while(start > query.l){
+   start--;
+   freq[a[start]]++;
 
-            if(freq[a[start]]==1)
-              cnt++;
+   if(freq[a[start]]==1)cnt++;
+  }
 
-        }
+  while(end<query.r){
+   end++;
+   freq[a[end]]++;
 
-        while(end<query.r)
-        {
-          //  cout<<"3 "<<start<<" "<<query.l<<endl;
-            end++;
-            freq[a[end]]++;
+   if(freq[a[end]]==1)cnt++;  
+  }
 
-            if(freq[a[end]]==1)
-              cnt++;
-              
-              
-        }
+  while(end > query.r){
+   freq[a[end]]--;
 
-         while(end > query.r)
-        {
-          //  cout<<"4 "<<start<<" "<<query.l<<endl;
-         
-            freq[a[end]]--;
+   if(freq[a[end]]==0)  cnt--;
+     end--;
+  }
 
-            if(freq[a[end]]==0)
-              cnt--;
-                  end--;
-              
-             
-        }
-
-        ans[query.index]=cnt;
-    }
-
-    return ans;
-
+  ans[query.index]=cnt;
+  }
+return ans;
 }
 
-int  main()
-{
-    int n;  cin>>n;
-    vector<int>v(n);
+int  main(){
+ int n;  cin>>n;
+ vector<int>v(n);
+ 
+ for(int i=0; i<n ;i++)  cin>>v[i];
+ int q;      cin>>q;
 
-    for(int i=0; i<n ;i++)  cin>>v[i];
+ vector<Query>queries;
 
-    int q;      cin>>q;
+ for(int i=0; i<q ;i++){
+  int l;  cin>>l;
+  int r;  cin>>r;
+  queries.emplace_back(l-1,r-1,i);
+  }
 
-    vector<Query>queries;
+  BLOCK_SIZE=(sqrt(v.size()));
 
-    for(int i=0; i<q ;i++)
-    {
-        int l;  cin>>l;
-        int r;  cin>>r;
+  vector<int>ans=solve(v,queries);
 
-        queries.emplace_back(l-1,r-1,i);
-    }
-
-    BLOCK_SIZE=static_cast<int>(sqrt(v.size()));
-
-    vector<int>ans=solve(v,queries);
-
-    for(int  i=0 ; i<ans.size();i++)
-    {
+  for(int  i=0 ; i<ans.size();i++){
         cout<<ans[i]<<endl;
     }
-
-
-
 }
