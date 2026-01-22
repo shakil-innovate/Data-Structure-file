@@ -11,21 +11,20 @@ struct node{
 	node* child[2];
 
 	node(){
-		child[0]=child[1]=NULL;
+	 child[0]=child[1]=NULL;
 	}
 };
 
 void insert(node* root,ll num){
+  node* cur=root;
+  for(ll i=31;i>=0;i--){
+	ll bit=((num>>i) & 1);
 
-	  node* cur=root;
-		for(ll i=31;i>=0;i--){
-			ll bit=((num>>i) & 1);
-
-			if(!cur->child[bit]){
-				cur->child[bit]=new node();
-			}
-			cur=cur->child[bit];
-		}
+	if(!cur->child[bit]){
+		cur->child[bit]=new node();
+	}
+	cur=cur->child[bit];
+	}
 }
 
 //find mx_xor
@@ -38,9 +37,8 @@ ll max_xor(node* root,ll num){
 		ll want=1-bit;
 
 		if(cur->child[want]){
-			ans|=(1LL<<i);
-
-			cur=cur->child[want];
+		 ans|=(1LL<<i);
+		 cur=cur->child[want];
 		}
 		else cur=cur->child[bit];
 	}
@@ -53,17 +51,14 @@ void shakil(){
 	vl v(n);
 
 	node* root=new node();
-
 	for(auto &i:v)	{cin>>i;insert(root,i);}
 
 	ll mx=0;
-	
 	for(auto x:v){
 		mx=max(mx,max_xor(root,x));
 	}
 
 	cout<<"max_xor:"<<mx<<nl;
-	
 }
 
 int main(){
