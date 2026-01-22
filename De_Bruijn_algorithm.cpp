@@ -12,32 +12,29 @@ ll n,k=2;
 string ans;
 
 void dfs(string &u){
-    for(ll c=0;c<k;c++){
-        char ch='0'+c;
-        
-        string edge=u+ch;
+  for(ll c=0;c<k;c++){
+   char ch='0'+c;
+   string edge=u+ch;
 
-        if(!used[edge]){
-            used[edge]=1;
-
-            string v=edge.substr(1);
-            dfs(v);
-
-            ans.pb(ch);
-        }
-    }
+   if(!used[edge]){
+    used[edge]=1;
+    string v=edge.substr(1);
+      
+    dfs(v);
+    ans.pb(ch);
+   }
+ }
 }
 
 void shakil(){
-       cin>>n;
-        string start(n-1,'0');
-       dfs(start);
+  cin>>n;
+  string start(n-1,'0');
+  dfs(start);
 
-    //    cout<<start<<nl;
-       ans+=start;
-       reverse(ans.begin(),ans.end());
+  ans+=start;
+  reverse(ans.begin(),ans.end());
 
-       cout<<ans<<nl;
+  cout<<ans<<nl;
 }
 
 int main(){
