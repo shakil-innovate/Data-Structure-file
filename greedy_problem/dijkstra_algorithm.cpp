@@ -5,27 +5,22 @@ const int N=1000;
 
 
 class Graph{
-   private:
-      int vertices;
-      vector<vector<pair<int,int>>>adj;
+ public:
+  int vertices;
+  vector<vector<pair<int,int>>>adj;
 
-  public:
-    Graph(int v);
-    void addEdge(int u, int v, int w) {
-        adj[u].push_back({v, w});
-        adj[v].push_back({u, w}); // Undirected graph
-    }
-    vector<int> shortest_path(int src);
-};
+  Graph(int v){
+   vertices=v;
+   adj.resize(v+1);
+  }
 
-Graph::Graph(int v){
-  vertices=v;
-  adj.resize(v+1);
-}
-
-vector<int> Graph::shortest_path(int src){
+ void addEdge(int u, int v, int w) {
+  adj[u].push_back({v, w});
+  adj[v].push_back({u, w}); // Undirected graph
+ }
+ 
+vector<int> shortest_path(int src){
  vector<int>dist(vertices+1,INT_MAX);
-
  priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>pq;
 
  dist[src]=0;
@@ -33,10 +28,9 @@ vector<int> Graph::shortest_path(int src){
 
  while(!pq.empty()){
   int node=pq.top().second;
-
   pq.pop();
 
-for (auto it : adj[node]){
+  for (auto it : adj[node]){
     int weight=it.second;
     int nxtNode=it.first  ;
 
@@ -48,8 +42,7 @@ for (auto it : adj[node]){
  }
  return dist;
 }
-
-
+};
 
 int main(){
   int edge,vertex;
