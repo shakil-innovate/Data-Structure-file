@@ -8,33 +8,34 @@ using namespace std;
 
 class DisjoinSet{
   public:
-   vector<ll>sz,parent;
+  vector<ll>sz,parent;
 
-   DisjoinSet(ll n){
-    sz.resize(n+1,1);
-    parent.resize(n+1);
+  DisjoinSet(ll n){
+   sz.resize(n+1,1);
+  parent.resize(n+1);
 
-    for(ll i=1;i<=n;i++)    parent[i]=i;
+  for(ll i=1;i<=n;i++)    
+    parent[i]=i;
+  }
+
+  ll findParent(ll node){
+   if(node==parent[node])return node;
+   return parent[node]=findParent(parent[node]);
+  }
+
+  void unionSet(ll u,ll v){
+   ll pu=findParent(u),pv=findParent(v);
+
+   if(pu==pv)  return;
+   if(sz[pu] > sz[pv]){
+    parent[pv]=pu;
+    sz[pu]+=sz[pv];
    }
-
-   ll findParent(ll node){
-    if(node==parent[node])return node;
-     return parent[node]=findParent(parent[node]);
-   }
-
-   void unionSet(ll u,ll v){
-        ll pu=findParent(u),pv=findParent(v);
-
-        if(pu==pv)  return;
-        if(sz[pu] > sz[pv]){
-            parent[pv]=pu;
-            sz[pu]+=sz[pv];
-        }
-        else{
-            parent[pu]=pv;
-            sz[pv]+=sz[pu];
-        } 
-   }
+  else{
+    parent[pu]=pv;
+    sz[pv]+=sz[pu];
+  } 
+ }
 };
 
 void shakil(){
@@ -46,15 +47,12 @@ void shakil(){
         ll u,v; cin>>u>>v;
         dj.unionSet(u,v);
     }
-
     set<ll>st;
 
     for(ll i=1;i<=n;i++){
         st.insert(dj.findParent(i));
     }
-
     cout<<st.size()<<nl;
-
 }
 
 int main(){
