@@ -27,14 +27,12 @@ class DisjoinSet{
    ll pu=findParent(u),pv=findParent(v);
 
    if(pu==pv)  return;
-   if(sz[pu] > sz[pv]){
+    
+   if(sz[pu]<sz[pv])swap(u,v);
+    
     parent[pv]=pu;
     sz[pu]+=sz[pv];
-   }
-  else{
-    parent[pu]=pv;
-    sz[pv]+=sz[pu];
-  } 
+
  }
 };
 
