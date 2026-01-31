@@ -28,7 +28,7 @@ class DisjoinSet{
 
    if(pu==pv)  return;
     
-   if(sz[pu]<sz[pv])swap(u,v);
+   if(sz[pu]<sz[pv])swap(pu,pv);
     
     parent[pv]=pu;
     sz[pu]+=sz[pv];
