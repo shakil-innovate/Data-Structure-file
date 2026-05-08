@@ -1,3 +1,5 @@
+//https://toph.co/p/a-super-easy-problem---array-query
+
 #include<bits/stdc++.h>
 using namespace std;
 
