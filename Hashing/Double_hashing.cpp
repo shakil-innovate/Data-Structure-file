@@ -33,6 +33,9 @@ struct  DoubleHash{
       p2[i+1]=(p2[i]*base2)%mod2;
     }
   }
+
+
+  //you provide 0 based,,it convert 1 based; 
  
   pair<ll,ll> getHash(ll l,ll r){
     ll x1=(h1[r+1]-h1[l]*p1[r-l+1] )%mod1;
