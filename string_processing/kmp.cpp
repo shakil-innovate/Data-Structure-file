@@ -39,18 +39,16 @@ int main()
 
     int j=1;
 
-    for(int i=2;i<pattern.size();i++)
-    {
-        if(pattern[i]==pattern[j])
+        int j=0;  // note: also fix the starting index/convention
+        pie[1] = 0;
+        for(int i=2;i<pattern.size();i++)
         {
-            pie[i]=j;
-            j++;
+            while(j > 0 && pattern[i] != pattern[j+1])
+                j = pie[j];
+            if(pattern[i] == pattern[j+1])
+                j++;
+            pie[i] = j;
         }
-        else
-        {
-             j=1;
-        }
-    }
 
     mos();
 
