@@ -50,17 +50,24 @@ ll g(ll a,ll b,ll &x,ll &y){
 
 void shakil(){
 
-   ll a=15,b=10,c=25;
+    //ax+by=c
+
+   ll a=2,b=4,c=19;
    ll x,y;
 
    ll d=g(a,b,x,y);
+
+   if(c%d!=0){
+        cout<<"NO solution exist"<<nl;
+        return;
+   }
 
    ll x0=x*(c/d),y0=y*(c/d);
 
    cout<<"particular soltion: "<<x0<<" "<<y0<<nl;
 
    //other soltion:
-   //(x0+(c/d)*m),  (y0 - (c/d)*m)
+   //(x0+(b/d)*m),  (y0 - (a/d)*m)
 }
 
 int main(){
