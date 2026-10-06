@@ -1,0 +1,92 @@
+"""
+LAB 4: MapReduce -- Word Count from Scratch (maps to Lecture 5)
+------------------------------------------------------------------
+Goal: Rebuild the MapReduce picture from the slides (input splits ->
+map tasks -> shuffle & sort -> reduce tasks -> output) as real code
+that runs on YOUR machine, using several processes as the "workers".
+
+We don't have a real cluster, so multiprocessing.Process plays the
+role of each worker machine, and MASTER (the main() function below)
+plays the role of the master that the slides describe: it splits the
+input, hands out map tasks, does the shuffle, then hands out reduce
+tasks.
+"""
+import multiprocessing as mp
+import os
+# "INPUT": pretend this is a tiny corpus of documents (slide 6:
+# Worked Example -- Word Count). In real MapReduce this would be
+# split across GFS; here it's just a Python list.
+DOCUMENTS = [
+    "distributed systems are fun",
+    "map reduce is a programming model",
+    "the master splits input into map tasks",
+    "reduce tasks sum the counts from map tasks",
+    "fun fun fun distributed computing",
+]
+NUM_REDUCERS = 3   # this is "R" from the slides (number of reduce partitions)
+# STEP 1: map(k1, v1) -> list(k2, v2)
+# Exactly the pseudocode on slide 6: for each word, emit (word, "1")
+def map_task(doc_id, text):
+    print(f"[MAP worker pid={os.getpid()}] mapping doc {doc_id}: {text!r}")
+    pairs = []
+    for word in text.split():
+        pairs.append((word, 1))
+    return pairs
+# STEP 2: shuffle & sort
+# The master collects every mapper's output and groups all values
+# that share the same key. In real MapReduce this is done with
+# hash(key) % R across the network; here it's just a dictionary.
+def shuffle(all_mapped_pairs, num_reducers):
+    groups = {}
+    for pairs in all_mapped_pairs:
+        for word, count in pairs:
+            groups.setdefault(word, []).append(count)
+
+    # partition the unique keys into num_reducers buckets, like
+    # "partitioned into R regions by hash(key) mod R" (slide 5)
+    buckets = [{} for _ in range(num_reducers)]
+    for word, counts in groups.items():
+        bucket_id = hash(word) % num_reducers
+        buckets[bucket_id][word] = counts
+    return buckets
+# STEP 3: reduce(k2, list(v2)) -> list(v2)
+# Exactly the pseudocode on slide 6: sum the counts for each word.
+def reduce_task(bucket_id, bucket):
+    print(f"[REDUCE worker pid={os.getpid()}] reducing bucket {bucket_id} "
+          f"({len(bucket)} distinct words)")
+    result = {}
+    for word, counts in bucket.items():
+        result[word] = sum(counts)
+    return result
+# MASTER: coordinates everything, same role as the "Master" box
+# on slide 5 (assigns tasks, tracks state).
+def main():
+    print("[MASTER] Splitting input into", len(DOCUMENTS), "map tasks")
+
+    # --- Map phase: run every map task in parallel, one process each ---
+    with mp.Pool(processes=4) as pool:
+        map_results = pool.starmap(
+            map_task, [(i, doc) for i, doc in enumerate(DOCUMENTS)]
+        )
+    print("[MASTER] Map phase done. Starting shuffle...")
+
+    # --- Shuffle phase: happens on the master, like the slides describe ---
+    buckets = shuffle(map_results, NUM_REDUCERS)
+    print(f"[MASTER] Shuffle done. Created {NUM_REDUCERS} reduce partitions.")
+
+    # --- Reduce phase: run every reduce task in parallel ---
+    with mp.Pool(processes=NUM_REDUCERS) as pool:
+        reduce_results = pool.starmap(
+            reduce_task, list(enumerate(buckets))
+        )
+
+    # --- Combine final output from all reducers ---
+    final_counts = {}
+    for partial in reduce_results:
+        final_counts.update(partial)
+
+    print("\n[MASTER] FINAL WORD COUNTS:")
+    for word, count in sorted(final_counts.items(), key=lambda kv: -kv[1]):
+        print(f"  {word:12s} {count}")
+if __name__ == "__main__":
+    main()
