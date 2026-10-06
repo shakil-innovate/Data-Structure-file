@@ -1,27 +1,7 @@
-"""
-LAB 5: MapReduce -- Fault Tolerance & Stragglers (maps to Lecture 5, slide 7)
---------------------------------------------------------------------------------
-Builds on Lab 4. Same word-count job, but now bad things happen to
-some of the map tasks, and the MASTER has to cope -- exactly like the
-slide says: "Across a cluster of thousands of machines, failures are
-the norm... MapReduce's runtime -- not the programmer -- absorbs them."
-
-Two failure types simulated here:
-
-  1. WORKER CRASH   -> task raises an exception (worker "died").
-                       Master notices and RE-EXECUTES the task.
-  2. STRAGGLER       -> task takes way too long (slow machine).
-                       Master launches a BACKUP ("speculative")
-                       copy of the same task on another worker and
-                       uses whichever copy finishes first.
-
-Run this a few times -- the crash/straggler doc is picked on purpose
-here (doc 1 crashes once, doc 3 is always slow), so you can watch the
-recovery logic every run.
-"""
 import multiprocessing as mp
 import os
 import time
+
 DOCUMENTS = [
     "distributed systems are fun",
     "map reduce is a programming model",
@@ -29,7 +9,9 @@ DOCUMENTS = [
     "reduce tasks sum the counts from map tasks",
     "fun fun fun distributed computing",
 ]
+
 MAP_TIMEOUT = 2.0  # seconds the master is willing to wait for one map task
+
 # A map task that sometimes "misbehaves" on purpose, so we can
 # watch the master's recovery logic kick in.
 #   doc_id 1 -> always crashes on its FIRST attempt (simulates a
@@ -48,6 +30,9 @@ def flaky_map_task(doc_id, text, attempt):
 
     pairs = [(word, 1) for word in text.split()]
     return pairs
+
+
+
 # MASTER logic: run one map task, and RE-EXECUTE it (possibly many
 # times) if the worker crashed. This is the "re-execution" bullet
 # from slide 7.
@@ -70,6 +55,7 @@ def run_map_with_retry(pool, doc_id, text, max_attempts=3):
                   f"re-executing on a fresh worker")
             continue
     raise RuntimeError(f"doc {doc_id} failed after {max_attempts} attempts")
+
 def main():
     print("[MASTER] Splitting input into", len(DOCUMENTS), "map tasks")
 
@@ -88,5 +74,7 @@ def main():
     print("\n[MASTER] All map tasks eventually succeeded. FINAL WORD COUNTS:")
     for word, count in sorted(counts.items(), key=lambda kv: -kv[1]):
         print(f"  {word:12s} {count}")
+
+
 if __name__ == "__main__":
     main()
